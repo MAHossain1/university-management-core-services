@@ -20,7 +20,7 @@ const getAllFromDB = async (
   filters: IRoomFilterRequest,
   options: IPaginationOptions
 ): Promise<IGenericResponse<Room[]>> => {
-  const { searchTerm } = filters;
+  const { searchTerm, ...filterData } = filters;
 
   const andConditions = [];
   if (searchTerm) {
@@ -29,6 +29,16 @@ const getAllFromDB = async (
         [field]: {
           contains: searchTerm,
           mode: 'insensitive',
+        },
+      })),
+    });
+  }
+
+  if (Object.keys(filterData).length > 0) {
+    andConditions.push({
+      AND: Object.keys(filterData).map(key => ({
+        [key]: {
+          equals: (filterData as any)[key],
         },
       })),
     });
