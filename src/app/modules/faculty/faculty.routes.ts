@@ -32,11 +32,13 @@ router.delete(
 
 router.post(
   '/:id/assigned-courses',
+  validateRequest(FacultyValidation.assignedOrRemoveCourses),
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
   FacultyController.assignedCourses
 );
 router.delete(
   '/:id/remove-courses',
+  validateRequest(FacultyValidation.assignedOrRemoveCourses),
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
   FacultyController.removeCourses
 );
