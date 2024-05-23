@@ -179,6 +179,11 @@
             "date": 1716444770842,
             "name": "E:\\projects\\university-management-core-service\\logs\\winston\\errors\\phu-2024-23-05-12-error.log",
             "hash": "9dbff0518c664dccc7e671010d99703c5a9ccbd1ee06ba042ca52eafc34f3d36"
+        },
+        {
+            "date": 1716448980598,
+            "name": "E:\\projects\\university-management-core-service\\logs\\winston\\errors\\phu-2024-23-05-13-error.log",
+            "hash": "c82a6c59e533552a0ce36919d817ca44e0a0f9e2c7aa6326d81b51597a377991"
         }
     ],
     "hashType": "sha256"
