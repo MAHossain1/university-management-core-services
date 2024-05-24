@@ -229,8 +229,8 @@ model OfferedCourseSection {
 
 model OfferedCourseClassSchedule {
   id        String   @id @default(uuid())
-  startDate String
-  endDate   String
+  startTime String
+  endTime   String
   dayOfWeek weekDays @default(SATURDAY)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
