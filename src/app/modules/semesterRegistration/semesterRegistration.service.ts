@@ -163,10 +163,54 @@ const deleteByIdFromDB = async (id: string): Promise<SemesterRegistration> => {
   return result;
 };
 
+const startMyRegistration = async (authUserId: string) => {
+  const studentInfo = await prisma.student.findFirst({
+    where: {
+      studentId: authUserId,
+    },
+  });
+  if (!studentInfo)
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Student info not found.');
+
+  const semesterRegistrationInfo = await prisma.semesterRegistration.findFirst({
+    where: {
+      status: {
+        in: [
+          SemesterRegistrationStatus.ONGOING,
+          SemesterRegistrationStatus.UPCOMING,
+        ],
+      },
+    },
+  });
+
+  if (semesterRegistrationInfo?.status === SemesterRegistrationStatus.UPCOMING)
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Semester Registration not started yet.'
+    );
+
+  const studentRegistration = await prisma.studentSemesterRegistration.create({
+    data: {
+      student: {
+        connect: {
+          id: studentInfo?.id,
+        },
+      },
+      semesterRegistration: {
+        connect: {
+          id: semesterRegistrationInfo?.id,
+        },
+      },
+    },
+  });
+  return studentRegistration;
+};
+
 export const SemesterRegistrationService = {
   insertIntoDB,
   getAllFromDB,
   getDataById,
   updateOneInDB,
   deleteByIdFromDB,
+  startMyRegistration,
 };
