@@ -2,6 +2,7 @@ import {
   Prisma,
   SemesterRegistration,
   SemesterRegistrationStatus,
+  StudentSemesterRegistration,
 } from '@prisma/client';
 import httpStatus, { BAD_REQUEST } from 'http-status';
 import ApiError from '../../../errors/ApiError';
@@ -163,7 +164,12 @@ const deleteByIdFromDB = async (id: string): Promise<SemesterRegistration> => {
   return result;
 };
 
-const startMyRegistration = async (authUserId: string) => {
+const startMyRegistration = async (
+  authUserId: string
+): Promise<{
+  semesterRegistration: SemesterRegistration | null;
+  studentSemesterRegistration: StudentSemesterRegistration | null;
+}> => {
   const studentInfo = await prisma.student.findFirst({
     where: {
       studentId: authUserId,
@@ -189,21 +195,38 @@ const startMyRegistration = async (authUserId: string) => {
       'Semester Registration not started yet.'
     );
 
-  const studentRegistration = await prisma.studentSemesterRegistration.create({
-    data: {
+  let studentRegistration = await prisma.studentSemesterRegistration.findFirst({
+    where: {
       student: {
-        connect: {
-          id: studentInfo?.id,
-        },
+        id: studentInfo?.id,
       },
       semesterRegistration: {
-        connect: {
-          id: semesterRegistrationInfo?.id,
-        },
+        id: semesterRegistrationInfo?.id,
       },
     },
   });
-  return studentRegistration;
+
+  if (!studentRegistration) {
+    studentRegistration = await prisma.studentSemesterRegistration.create({
+      data: {
+        student: {
+          connect: {
+            id: studentInfo?.id,
+          },
+        },
+        semesterRegistration: {
+          connect: {
+            id: semesterRegistrationInfo?.id,
+          },
+        },
+      },
+    });
+  }
+
+  return {
+    semesterRegistration: semesterRegistrationInfo,
+    studentSemesterRegistration: studentRegistration,
+  };
 };
 
 export const SemesterRegistrationService = {
