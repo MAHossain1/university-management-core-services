@@ -279,8 +279,8 @@ model StudentSemesterRegistration {
 }
 
 model StudentSemesterRegistrationCourse {
-  semesterRegistraionId  String
-  semesterRegistration   SemesterRegistration @relation(fields: [semesterRegistraionId], references: [id])
+  semesterRegistrationId String
+  semesterRegistration   SemesterRegistration @relation(fields: [semesterRegistrationId], references: [id])
   studentId              String
   student                Student              @relation(fields: [studentId], references: [id])
   offeredCourseId        String
@@ -290,6 +290,6 @@ model StudentSemesterRegistrationCourse {
   createdAt              DateTime             @default(now())
   updatedAt              DateTime             @updatedAt
 
-  @@id([semesterRegistraionId, studentId, offeredCourseId])
+  @@id([semesterRegistrationId, studentId, offeredCourseId])
   @@map("student_semester_registration_courses")
 }
