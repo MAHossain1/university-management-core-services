@@ -23,6 +23,12 @@ router.post(
 );
 
 router.post(
+  '/withdraw-from-course',
+  auth(ENUM_USER_ROLE.STUDENT),
+  SemesterRegistrationController.withdrawFromCourse
+);
+
+router.post(
   '/',
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
   SemesterRegistrationController.insertIntoDB
