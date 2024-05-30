@@ -25,6 +25,12 @@ router.post(
 );
 
 router.post(
+  '/confirm-my-registration',
+  auth(ENUM_USER_ROLE.STUDENT),
+  SemesterRegistrationController.confirmMyRegistration
+);
+
+router.post(
   '/withdraw-from-course',
   auth(ENUM_USER_ROLE.STUDENT),
   SemesterRegistrationController.withdrawFromCourse
