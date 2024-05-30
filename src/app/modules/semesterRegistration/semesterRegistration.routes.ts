@@ -13,12 +13,14 @@ router.get('/:id', SemesterRegistrationController.getDataById);
 router.post(
   '/start-my-registration',
   auth(ENUM_USER_ROLE.STUDENT),
+  validateRequest(SemesterRegistrationValidation.enrollOrWithdrawCourse),
   SemesterRegistrationController.startMyRegistration
 );
 
 router.post(
   '/enroll-into-course',
   auth(ENUM_USER_ROLE.STUDENT),
+  validateRequest(SemesterRegistrationValidation.enrollOrWithdrawCourse),
   SemesterRegistrationController.enrollIntoCourse
 );
 
