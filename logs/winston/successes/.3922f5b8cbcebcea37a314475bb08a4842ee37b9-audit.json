@@ -6,16 +6,6 @@
     "auditLog": "E:\\projects\\university-management-core-service\\logs\\winston\\successes\\.3922f5b8cbcebcea37a314475bb08a4842ee37b9-audit.json",
     "files": [
         {
-            "date": 1715941842679,
-            "name": "E:\\projects\\university-management-core-service\\logs\\winston\\successes\\phu-2024-17-05-16-success.log",
-            "hash": "705daab2a074041a1b180018762dda1b794fe6cb685685c1feaf2369feaaa52b"
-        },
-        {
-            "date": 1715943670119,
-            "name": "E:\\projects\\university-management-core-service\\logs\\winston\\successes\\phu-2024-17-05-17-success.log",
-            "hash": "78a1ece1077357656eba532c932b376ffc7f0edf45343ab041f4b025bc9bdfdf"
-        },
-        {
             "date": 1715989177142,
             "name": "E:\\projects\\university-management-core-service\\logs\\winston\\successes\\phu-2024-18-05-05-success.log",
             "hash": "453351aa2c23045a1aa50992e5df9705c3f1f63d9088176d7d51e2207b1de074"
@@ -234,6 +224,21 @@
             "date": 1717131668462,
             "name": "E:\\projects\\university-management-core-service\\logs\\winston\\successes\\phu-2024-31-05-11-success.log",
             "hash": "71a896d7a15fad5263fc76b8a2c6ac55f8f50a2cc57b5cae8e7b9e01abbb6516"
+        },
+        {
+            "date": 1717155998526,
+            "name": "E:\\projects\\university-management-core-service\\logs\\winston\\successes\\phu-2024-31-05-17-success.log",
+            "hash": "6816cedac60dfe273021c8e0bc22cd2d9f9140c26754d55a28bd101aae9c8045"
+        },
+        {
+            "date": 1717160143229,
+            "name": "E:\\projects\\university-management-core-service\\logs\\winston\\successes\\phu-2024-31-05-18-success.log",
+            "hash": "4400ad3baa484da297534c9c4d8c429a516134210ad5ebc106042a2551a4ccfd"
+        },
+        {
+            "date": 1717160451003,
+            "name": "E:\\projects\\university-management-core-service\\logs\\winston\\successes\\phu-2024-31-05-19-success.log",
+            "hash": "283fd8d017627091b911694824c186cf0da708f86613af61babcc244e0974cea"
         }
     ],
     "hashType": "sha256"
