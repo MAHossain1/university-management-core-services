@@ -1,8 +1,11 @@
 import {
+  Course,
+  OfferedCourse,
   Prisma,
   SemesterRegistration,
   SemesterRegistrationStatus,
   StudentSemesterRegistration,
+  StudentSemesterRegistrationCourse,
 } from '@prisma/client';
 import httpStatus, { BAD_REQUEST } from 'http-status';
 import ApiError from '../../../errors/ApiError';
@@ -345,7 +348,7 @@ const getMyRegistration = async (authUserId: string) => {
   return { semesterRegistration, studentSemesterRegistration };
 };
 
-const startNewSemester = async (id: string) => {
+const startNewSemester = async (id: string): Promise<{ message: string }> => {
   const semesterRegistration = await prisma.semesterRegistration.findUnique({
     where: {
       id,
@@ -358,17 +361,17 @@ const startNewSemester = async (id: string) => {
   if (!semesterRegistration)
     throw new ApiError(httpStatus.NOT_FOUND, 'SemesterRegistration not found.');
 
-  // if (semesterRegistration.status !== SemesterRegistrationStatus.ENDED)
-  //   throw new ApiError(
-  //     httpStatus.NOT_FOUND,
-  //     'SemesterRegistration not ended yet.'
-  //   );
+  if (semesterRegistration.status !== SemesterRegistrationStatus.ENDED)
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      'SemesterRegistration not ended yet.'
+    );
 
-  // if (semesterRegistration.academicSemester.isCurrent === true)
-  //   throw new ApiError(
-  //     httpStatus.BAD_REQUEST,
-  //     'Semester registration is already started.'
-  //   );
+  if (semesterRegistration.academicSemester.isCurrent === true)
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Semester registration is already started.'
+    );
 
   await prisma.$transaction(async prismaTransactionClient => {
     await prismaTransactionClient.academicSemester.updateMany({
@@ -418,10 +421,42 @@ const startNewSemester = async (id: string) => {
                   course: true,
                 },
               },
-              offeredCourseSection: true,
             },
           });
-        console.log(studentSemesterRegistrationCourses);
+
+        await asyncForEach(
+          studentSemesterRegistrationCourses,
+          async (
+            item: StudentSemesterRegistrationCourse & {
+              offeredCourse: OfferedCourse & {
+                course: Course;
+              };
+            }
+          ) => {
+            const isExistEnrolledData =
+              await prisma.studentEnrolledCourse.findFirst({
+                where: {
+                  studentId: item.studentId,
+                  courseId: item.offeredCourse.courseId,
+                  academicSemesterId: semesterRegistration.academicSemesterId,
+                },
+              });
+
+            if (!isExistEnrolledData) {
+              const enrolledCourseData = {
+                studentId: item.studentId,
+                courseId: item.offeredCourse.courseId,
+                academicSemesterId: semesterRegistration.academicSemesterId,
+              };
+
+              const studentEnrolledCourseData =
+                await prisma.studentEnrolledCourse.create({
+                  data: enrolledCourseData,
+                });
+              console.log(studentEnrolledCourseData);
+            }
+          }
+        );
       }
     );
   });
