@@ -182,7 +182,7 @@ const withdrawFromCourse = async (
   });
 
   return {
-    message: 'Successfully withdraw from course into course.',
+    message: 'Successfully withdraw from course.',
   };
 };
 

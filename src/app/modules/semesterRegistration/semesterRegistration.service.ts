@@ -477,8 +477,8 @@ const startNewSemester = async (id: string): Promise<{ message: string }> => {
                 await prismaTransactionClient.studentEnrolledCourse.create({
                   data: enrolledCourseData,
                 });
-              // console.log(studentEnrolledCourseData);
 
+              // Set marks for enrolled student
               await StudentEnrolledCourseMarkService.createStudentEnrolledCourseDefaultMark(
                 prismaTransactionClient,
                 {

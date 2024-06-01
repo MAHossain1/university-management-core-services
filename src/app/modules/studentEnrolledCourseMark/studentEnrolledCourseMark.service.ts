@@ -3,6 +3,9 @@ import {
   DefaultArgs,
   PrismaClientOptions,
 } from '@prisma/client/runtime/library';
+import httpStatus from 'http-status';
+import ApiError from '../../../errors/ApiError';
+import prisma from '../../../shared/prisma';
 
 const createStudentEnrolledCourseDefaultMark = async (
   prismaClient: Omit<
@@ -95,6 +98,47 @@ const createStudentEnrolledCourseDefaultMark = async (
   }
 };
 
+const updateStudentMarks = async (payload: any) => {
+  const { studentId, academicSemesterId, courseId, marks, examType } = payload;
+
+  const studentEnrolledCourseMarks =
+    await prisma.studentEnrolledCourseMark.findFirst({
+      where: {
+        student: {
+          id: studentId,
+        },
+        academicSemester: {
+          id: academicSemesterId,
+        },
+        studentEnrolledCourse: {
+          course: {
+            id: courseId,
+          },
+        },
+        examType,
+      },
+    });
+
+  if (!studentEnrolledCourseMarks) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Student enrolled course mark not found!'
+    );
+  }
+
+  const updateStudentMarks = await prisma.studentEnrolledCourseMark.update({
+    where: {
+      id: studentEnrolledCourseMarks.id,
+    },
+    data: {
+      marks,
+    },
+  });
+
+  return updateStudentMarks;
+};
+
 export const StudentEnrolledCourseMarkService = {
   createStudentEnrolledCourseDefaultMark,
+  updateStudentMarks,
 };
