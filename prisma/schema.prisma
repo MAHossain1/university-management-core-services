@@ -328,18 +328,18 @@ enum StudentEnrolledCourseStatus {
 }
 
 model StudentEnrolledCourseMark {
-  id                      String                @id @default(uuid())
-  createdAt               DateTime              @default(now())
-  updatedAt               DateTime              @updatedAt
+  id                      String                 @id @default(uuid())
+  createdAt               DateTime               @default(now())
+  updatedAt               DateTime               @updatedAt
   studentId               String
-  student                 Student               @relation(fields: [studentId], references: [id])
-  studentEnrolledCourseId String
-  studentEnrolledCourse   StudentEnrolledCourse @relation(fields: [studentEnrolledCourseId], references: [id])
+  student                 Student                @relation(fields: [studentId], references: [id])
+  studentEnrolledCourseId String?
+  studentEnrolledCourse   StudentEnrolledCourse? @relation(fields: [studentEnrolledCourseId], references: [id])
   academicSemesterId      String
-  academicSemester        AcademicSemester      @relation(fields: [academicSemesterId], references: [id])
+  academicSemester        AcademicSemester       @relation(fields: [academicSemesterId], references: [id])
   grade                   String?
   marks                   Int?
-  examType                ExamType
+  examType                ExamType               @default(MIDTERM)
 
   @@map("student_enrolled_course_marks")
 }
@@ -359,7 +359,8 @@ model StudentSemesterPayment {
   academicSemester     AcademicSemester @relation(fields: [academicSemesterId], references: [id])
   fullPaymentAmount    Int?             @default(0)
   partialPaymentAmount Int?             @default(0)
-  totalPaymentAmount   Int?             @default(0)
+  totalDueAmount       Int?             @default(0)
+  totalPaidAmount      Int?             @default(0)
   paymentStatus        PaymentStatus?   @default(PENDING)
 
   @@map("student_semester_payments")

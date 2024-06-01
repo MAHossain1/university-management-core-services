@@ -1,0 +1,27 @@
+Sat Jun 01 2024 6:2:5 } [PH] error: 
+Invalid `prisma.studentSemesterPayment.create()` invocation:
+
+
+Transaction API error: Transaction already closed: Could not perform operation.
+Sat Jun 01 2024 6:7:25 } [PH] error: Cannot read properties of undefined (reading 'studentId')
+Sat Jun 01 2024 6:7:49 } [PH] error: Cannot read properties of undefined (reading 'studentId')
+Sat Jun 01 2024 6:8:20 } [PH] error: 
+Invalid `prisma.studentSemesterPayment.create()` invocation:
+
+
+Transaction API error: Transaction already closed: Could not perform operation.
+Sat Jun 01 2024 6:11:29 } [PH] error: 
+Invalid `prisma.studentSemesterPayment.create()` invocation:
+
+
+Transaction API error: Transaction already closed: Could not perform operation.
+Sat Jun 01 2024 6:28:47 } [PH] error: 
+Invalid `prisma.studentSemesterPayment.create()` invocation:
+
+
+Transaction API error: Transaction already closed: Could not perform operation.
+Sat Jun 01 2024 6:30:55 } [PH] error: 
+Invalid `prisma.studentSemesterRegistrationCourse.findMany()` invocation:
+
+
+Transaction API error: Transaction already closed: Could not perform operation.

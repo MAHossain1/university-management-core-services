@@ -14,6 +14,7 @@ import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import { asyncForEach } from '../../../shared/utils';
+import { StudentSemesterPaymentService } from '../studentSemesterPayment/studentSemesterPayment.service';
 import { StudentSemesterRegistrationCourseService } from '../studentSemesterRegistrationCourse/studentSemesterRegistrationCourse.service';
 import { semesterRegistrationSearchableFields } from './semesterRegistration.constant';
 import {
@@ -367,13 +368,15 @@ const startNewSemester = async (id: string): Promise<{ message: string }> => {
       'SemesterRegistration not ended yet.'
     );
 
-  if (semesterRegistration.academicSemester.isCurrent === true)
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Semester registration is already started.'
-    );
+  // if (semesterRegistration.academicSemester.isCurrent === true)
+  //   throw new ApiError(
+  //     httpStatus.BAD_REQUEST,
+  //     'Semester registration is already started.'
+  //   );
 
+  // Execute transaction
   await prisma.$transaction(async prismaTransactionClient => {
+    // Update current semester
     await prismaTransactionClient.academicSemester.updateMany({
       where: {
         isCurrent: true,
@@ -392,6 +395,7 @@ const startNewSemester = async (id: string): Promise<{ message: string }> => {
       },
     });
 
+    // Fetch confirmed student semester registrations
     const studentSemesterRegistrations =
       await prisma.studentSemesterRegistration.findMany({
         where: {
@@ -402,9 +406,20 @@ const startNewSemester = async (id: string): Promise<{ message: string }> => {
         },
       });
 
+    // Process each student semester registration
     asyncForEach(
       studentSemesterRegistrations,
       async (studentSemReg: StudentSemesterRegistration) => {
+        if (studentSemReg.totalCreditsTaken) {
+          const totalPaymentAmount = studentSemReg.totalCreditsTaken * 5000;
+          await StudentSemesterPaymentService.createSemesterPayment({
+            studentId: studentSemReg.studentId,
+            academicSemesterId: semesterRegistration.academicSemester.id,
+            totalPaymentAmount: totalPaymentAmount,
+          });
+        }
+
+        // Fetch student semester registration courses
         const studentSemesterRegistrationCourses =
           await prisma.studentSemesterRegistrationCourse.findMany({
             where: {
@@ -424,6 +439,7 @@ const startNewSemester = async (id: string): Promise<{ message: string }> => {
             },
           });
 
+        // Enroll students in courses
         await asyncForEach(
           studentSemesterRegistrationCourses,
           async (
@@ -436,9 +452,11 @@ const startNewSemester = async (id: string): Promise<{ message: string }> => {
             const isExistEnrolledData =
               await prisma.studentEnrolledCourse.findFirst({
                 where: {
-                  studentId: item.studentId,
-                  courseId: item.offeredCourse.courseId,
-                  academicSemesterId: semesterRegistration.academicSemesterId,
+                  student: { id: item.studentId },
+                  course: { id: item.offeredCourse.courseId },
+                  academicSemester: {
+                    id: semesterRegistration.academicSemesterId,
+                  },
                 },
               });
 
@@ -449,11 +467,10 @@ const startNewSemester = async (id: string): Promise<{ message: string }> => {
                 academicSemesterId: semesterRegistration.academicSemesterId,
               };
 
-              const studentEnrolledCourseData =
-                await prisma.studentEnrolledCourse.create({
-                  data: enrolledCourseData,
-                });
-              console.log(studentEnrolledCourseData);
+              await prisma.studentEnrolledCourse.create({
+                data: enrolledCourseData,
+              });
+              // console.log(studentEnrolledCourseData);
             }
           }
         );
