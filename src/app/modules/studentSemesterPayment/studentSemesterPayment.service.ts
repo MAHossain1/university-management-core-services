@@ -1,10 +1,15 @@
+import { PrismaClient } from '@prisma/client';
+import {
+  DefaultArgs,
+  PrismaClientOptions,
+} from '@prisma/client/runtime/library';
 import prisma from '../../../shared/prisma';
 
 const createSemesterPayment = async (
-  //   prismaClient: Omit<
-  //     PrismaClient<PrismaClientOptions, never, DefaultArgs>,
-  //     '$connect' | '$disconnect' | '$on' | '$use' | '$transaction' | '$extends'
-  //   >,
+  prismaClient: Omit<
+    PrismaClient<PrismaClientOptions, never, DefaultArgs>,
+    '$connect' | '$disconnect' | '$on' | '$use' | '$transaction' | '$extends'
+  >,
   payload: {
     studentId: string;
     academicSemesterId: string;
