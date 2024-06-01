@@ -143,7 +143,58 @@ const getAllFromDB = async (
   };
 };
 
+const getByIdFromDB = async (
+  id: string
+): Promise<StudentEnrolledCourse | null> => {
+  const result = await prisma.studentEnrolledCourse.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      academicSemester: true,
+      student: true,
+      course: true,
+    },
+  });
+  return result;
+};
+
+const updateOneInDB = async (
+  id: string,
+  payload: Partial<StudentEnrolledCourse>
+): Promise<StudentEnrolledCourse> => {
+  const result = await prisma.studentEnrolledCourse.update({
+    where: {
+      id,
+    },
+    data: payload,
+    include: {
+      academicSemester: true,
+      student: true,
+      course: true,
+    },
+  });
+  return result;
+};
+
+const deleteByIdFromDB = async (id: string): Promise<StudentEnrolledCourse> => {
+  const result = await prisma.studentEnrolledCourse.delete({
+    where: {
+      id,
+    },
+    include: {
+      academicSemester: true,
+      student: true,
+      course: true,
+    },
+  });
+  return result;
+};
+
 export const StudentEnrolledCourseService = {
   insertIntoDB,
   getAllFromDB,
+  getByIdFromDB,
+  updateOneInDB,
+  deleteByIdFromDB,
 };
