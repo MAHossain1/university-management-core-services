@@ -65,6 +65,7 @@ const deleteFromDB = catchAsync(async (req: Request, res: Response) => {
 
 const myCourses = catchAsync(async (req: Request, res: Response) => {
   const user = (req as any).user;
+  console.log(user);
   const filter = pick(req.query, ['courseId', 'academicSemesterId']);
   const result = await StudentService.myCourses(user.userId, filter);
   sendResponse(res, {
