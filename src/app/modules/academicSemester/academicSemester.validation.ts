@@ -10,16 +10,16 @@ const create = z.object({
     year: z.number({
       required_error: 'Year is required.',
     }),
-    title: z.string({
+    title: z.enum([...academicSemesterTitles] as [string, ...string[]], {
       required_error: 'Title is required.',
     }),
-    code: z.string({
+    code: z.enum([...academicSemesterCodes] as [string, ...string[]], {
       required_error: 'Code is required.',
     }),
-    startMonth: z.string({
+    startMonth: z.enum([...academicSemesterMonths] as [string, ...string[]], {
       required_error: 'Start month is required.',
     }),
-    endMonth: z.string({
+    endMonth: z.enum([...academicSemesterMonths] as [string, ...string[]], {
       required_error: 'End month is required.',
     }),
   }),
