@@ -3,7 +3,11 @@ import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
-import { academicDepartmentSearchableFields } from './academicDepartment.constant';
+import { RedisClient } from '../../../shared/redis';
+import {
+  EVENT_ACADEMIC_DEPARTMENT_CREATED,
+  academicDepartmentSearchableFields,
+} from './academicDepartment.constant';
 import { IAcademicDepartmentFilterRequest } from './academicFaculty.interface';
 
 const insertIntoDB = async (
@@ -15,6 +19,13 @@ const insertIntoDB = async (
       academicFaculty: true,
     },
   });
+
+  if (result) {
+    await RedisClient.publish(
+      EVENT_ACADEMIC_DEPARTMENT_CREATED,
+      JSON.stringify(result)
+    );
+  }
 
   return result;
 };

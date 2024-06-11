@@ -18,17 +18,16 @@ import { StudentSemesterPaymentRoutes } from '../modules/studentSemesterPayment/
 const router = express.Router();
 
 const moduleRoutes = [
-  // ... routes
   {
     path: '/academic-semesters',
     route: AcademicSemesterRoutes,
   },
   {
-    path: '/academic-faculty',
+    path: '/academic-faculties',
     route: AcademicFacultyRoutes,
   },
   {
-    path: '/academic-department',
+    path: '/academic-departments',
     route: AcademicDepartmentRoutes,
   },
   {

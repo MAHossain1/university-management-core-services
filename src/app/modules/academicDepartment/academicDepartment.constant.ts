@@ -5,3 +5,5 @@ export const academicDepartmentFilterableFields: string[] = [
 ];
 
 export const academicDepartmentSearchableFields: string[] = ['title'];
+
+export const EVENT_ACADEMIC_DEPARTMENT_CREATED = 'academic_department.created';
